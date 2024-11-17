@@ -1,0 +1,22 @@
+[
+    {
+        "label": "Dashboard",
+        "name": "dashboard",
+        "isSelected": true
+    },
+    {
+        "label": "Add Contents",
+        "name": "addContents",
+        "isSelected": false
+    },
+    {
+        "label": "Profile",
+        "name": "profile",
+        "isSelected": false
+    },
+    {
+        "label": "Login",
+        "name": "login",
+        "isSelected": false
+    }
+]
