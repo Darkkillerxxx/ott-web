@@ -21,10 +21,10 @@ const DashboardCardInfo = () =>{
             color="warning"
             value={
             <>
-                2.49%{' '}
+                170{' '}
             </>
             }
-            title="Conversion Rate"
+            title="TV Shows"
             action={
             <CDropdown alignment="end">
                 <CDropdownToggle color="transparent" caret={false} className="text-white p-0">

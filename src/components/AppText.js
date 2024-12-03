@@ -5,9 +5,9 @@ import "../common/style.css"; // Import the CSS file containing the Roboto style
 // AppText Component
 const AppText = ({ children, style, className }) => {
     return (
-        <span className={`roboto-regular ${className}`} style={style}>
+        <div className={`roboto-regular ${className}`} style={style}>
             {children}
-        </span>
+        </div>
     );
 };
 

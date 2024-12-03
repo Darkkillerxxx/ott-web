@@ -15,36 +15,46 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import StarIcon from "@mui/icons-material/Star";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import ScreenHeader from "../components/ScreenHeader";
 
 const ManageShows = () => {
   const [shows, setShows] = useState([
     {
       id: 1,
-      image: "https://via.placeholder.com/50",
-      name: "Show 1",
-      description: "Description of Show 1",
+      image: "https://www.rollingstone.com/wp-content/uploads/2024/11/AMOTI_102_Unit_00465R.jpg?w=1581&h=1054&crop=1",
+      name: "A Man on the Inside",
+      description: "A retired professor gets a new lease on life when a private investigator hires him to go undercover inside a San Francisco retirement home",
+      rating: 3,
+      views: 1200,
       dateAdded: "2024-11-15",
     },
     {
       id: 2,
-      image: "https://via.placeholder.com/50",
-      name: "Show 2",
-      description: "Description of Show 2",
+      image: "https://upload.wikimedia.org/wikipedia/en/2/2f/Kaala_Paani_poster.png",
+      name: "Dark Waters",
+      description: "Individuals with intertwined destinies find themselves in a fight for their lives as they battle nature's wrath",
+      rating: 4,
+      views: 540,
       dateAdded: "2024-11-14",
     },
     {
       id: 3,
-      image: "https://via.placeholder.com/50",
-      name: "Show 3",
-      description: "Description of Show 3",
+      image: "https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p26780072_b_v8_af.jpg",
+      name: "Queen Of Tears",
+      description: "The queen of department stores and the prince of supermarkets weather a marital crisis, until love miraculously begins to bloom again",
+      rating: 2,
+      views: 220,
       dateAdded: "2024-11-13",
     },
     {
       id: 4,
-      image: "https://via.placeholder.com/50",
-      name: "Show 4",
-      description: "Description of Show 4",
+      image: "https://upload.wikimedia.org/wikipedia/en/e/ed/Navarasa_web_series.jpg",
+      name: "Navarasa",
+      rating: 5,
+      views: 3000,
+      description: "The nine human emotions of the Indian aesthetic theory are explored in this anthology series",
       dateAdded: "2024-11-12",
     },
   ]);
@@ -117,6 +127,29 @@ const ManageShows = () => {
     },
     { field: "name", headerName: "Name", width: 200 },
     { field: "description", headerName: "Description", width: 300 },
+    {
+      field: "rating",
+      headerName: "Rating",
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {Array.from({ length: params.value }, (_, i) => (
+            <StarIcon key={i} style={{ color: "gold" }} />
+          ))}
+        </div>
+      ),
+    },
+    {
+      field: "views",
+      headerName: "Views",
+      width: 100,
+      renderCell: (params) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <VisibilityIcon style={{ marginRight: "5px", color: "gray" }} />
+          {params.value}
+        </div>
+      ),
+    },
     { field: "dateAdded", headerName: "Date Added", width: 150 },
     {
       field: "actions",
@@ -132,8 +165,7 @@ const ManageShows = () => {
 
   return (
     <div style={{ padding: "20px" }}>
-      
-      <ScreenHeader label='Manage Shows' />
+      <ScreenHeader label="Manage Shows" />
 
       <Grid container spacing={2}>
         {/* Filters Section */}

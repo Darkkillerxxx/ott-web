@@ -13,41 +13,31 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import ScreenHeader from "../components/ScreenHeader";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 const ManageLiveShows = () => {
   // Sample Data
   const [liveShows, setLiveShows] = useState([
     {
       id: 1,
-      image: "https://via.placeholder.com/50",
-      name: "Live Show 1",
-      description: "Description of Live Show 1",
+      image: "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTnz9XO_DTyfa-ETnHLpMENST7czss5yYQjTDMf0WYim-Kb4Pzqx9Wh2hnS9UFyrq7F7szW",
+      name: "Big Boss OTT",
+      description: "Bigg Boss OTT is a digital spin-off of the popular Indian Hindi-language reality show Bigg Boss franchise",
       url: "https://example.com/live-show-1",
+      views: 30000,
+      rating: 4,
       dateAdded: "2024-11-15",
     },
     {
       id: 2,
-      image: "https://via.placeholder.com/50",
-      name: "Live Show 2",
-      description: "Description of Live Show 2",
+      image: "https://sportshub.cbsistatic.com/i/r/2024/11/16/72d392b1-8917-4c9b-ab38-6ebd118bf686/thumbnail/770x433/2df94eb343bbd6e91d8c54f3bd2380f0/mike-tyson-jake-paul-action-2.jpg",
+      name: "Jake Paul Vs Mike Tyson",
+      description: "Jake Paul vs. Mike Tyson was a professional boxing match between YouTuber-turned-professional boxer Jake Paul and former undisputed heavyweight world champion Mike Tyson",
       url: "https://example.com/live-show-2",
+      views: 20000,
+      rating: 3,
       dateAdded: "2024-11-14",
-    },
-    {
-      id: 3,
-      image: "https://via.placeholder.com/50",
-      name: "Live Show 3",
-      description: "Description of Live Show 3",
-      url: "https://example.com/live-show-3",
-      dateAdded: "2024-11-13",
-    },
-    {
-      id: 4,
-      image: "https://via.placeholder.com/50",
-      name: "Live Show 4",
-      description: "Description of Live Show 4",
-      url: "https://example.com/live-show-4",
-      dateAdded: "2024-11-12",
     },
   ]);
 
@@ -70,7 +60,6 @@ const ManageLiveShows = () => {
   };
 
   const applyFilters = () => {
-    // Filter logic (if required to filter data)
     let filteredShows = liveShows.filter((show) => {
       let matches = true;
       if (filters.search && !show.name.toLowerCase().includes(filters.search.toLowerCase())) {
@@ -82,6 +71,15 @@ const ManageLiveShows = () => {
       return matches;
     });
     setLiveShows(filteredShows);
+  };
+
+  // Helper function to render star ratings
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(i <= rating ? <StarIcon key={i} color="primary" /> : <StarBorderIcon key={i} />);
+    }
+    return stars;
   };
 
   // Columns for the Data Grid
@@ -107,12 +105,19 @@ const ManageLiveShows = () => {
         </a>
       ),
     },
+    { field: "views", headerName: "Views", width: 120 },
+    {
+      field: "rating",
+      headerName: "Rating",
+      width: 150,
+      renderCell: (params) => <div style={{ display: "flex", gap: "2px" }}>{renderStars(params.value)}</div>,
+    },
     { field: "dateAdded", headerName: "Date Added", width: 150 },
   ];
 
   return (
     <div style={{ padding: "20px" }}>
-        <ScreenHeader label="Manage Live Shows"/>
+      <ScreenHeader label="Manage Live Shows" />
 
       <Grid container spacing={2}>
         {/* Filters Section */}
@@ -144,7 +149,7 @@ const ManageLiveShows = () => {
               onChange={handleShowNameChange}
               renderValue={(selected) => selected.join(", ")}
             >
-              {["Live Show 1", "Live Show 2", "Live Show 3", "Live Show 4"].map((show) => (
+              {["Big Boss OTT", "Jake Paul Vs Mike Tyson"].map((show) => (
                 <MenuItem key={show} value={show}>
                   <Checkbox checked={filters.showName.indexOf(show) > -1} />
                   <ListItemText primary={show} />

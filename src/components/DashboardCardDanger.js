@@ -21,10 +21,10 @@ const DashboardCardDanger = () =>{
         color="danger"
         value={
           <>
-            44K{' '}
+            6{' '}
           </>
         }
-        title="Sessions"
+        title="Channels"
         action={
           <CDropdown alignment="end">
             <CDropdownToggle color="transparent" caret={false} className="text-white p-0">

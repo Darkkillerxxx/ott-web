@@ -21,10 +21,10 @@ const DashboardCardLightBlue = () =>{
                         color="info"
                         value={
                             <>
-                            $6.200{' '}
+                            62{' '}
                             </>
                         }
-                    title="Income"
+                    title="Videos"
                     action={
                         <CDropdown alignment="end">
                         <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
