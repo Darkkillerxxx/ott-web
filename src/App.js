@@ -13,6 +13,7 @@ import ManageEpisodes from './screens/ManageEpisodes';
 import ManageLiveShows from './screens/ManageLiveShows';
 import ManageShows from './screens/ManageShows';
 import AddMovie from './screens/AddMovies';
+import SeriesDetails from './screens/SeriesDetails';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -43,7 +44,8 @@ const App = () => {
           </div>
           <div className='col-10' style={{ backgroundColor: '#fcfcfc' }}>
             <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
+                 {/* Redirect unknown paths to Dashboard */}
+              <Route path="/" element={<Dashboard />} />
               <Route path="/addEpisodes" element={<AddEpisodes />} />
               <Route path="/profile" element={<Profile handleLogout={handleLogout} />} />
               <Route path="/addShows" element={<AddShows />} />
@@ -53,8 +55,7 @@ const App = () => {
               <Route path="/manageEpisodes" element={<ManageEpisodes />} />
               <Route path="/manageLiveShows" element={<ManageLiveShows />} />
               <Route path="/manageShows" element={<ManageShows />} />
-              {/* Redirect unknown paths to Dashboard */}
-              <Route path="*" element={<Navigate to="/dashboard" />} />
+              <Route path="/seriesDetails/:id" element={<SeriesDetails />} />           
             </Routes>
           </div>
         </div>
@@ -62,7 +63,6 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<Login handleLogin={handleLogin} />} />
           {/* Redirect unknown paths to Login */}
-          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       )}
     </Router>

@@ -27,6 +27,7 @@
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",
     "react-google-charts": "^5.2.1",
+    "react-message-popup": "^2.0.0-alpha.0",
     "react-router-dom": "^6.28.0",
     "react-scripts": "5.0.1",
     "react-step-progress": "^1.0.3",
