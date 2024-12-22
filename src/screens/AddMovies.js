@@ -7,7 +7,7 @@ import { ProgressBar, Step } from "react-step-progress-bar";
 import { Spinner } from "react-bootstrap"; // Import the spinner from react-bootstrap (or any spinner component you prefer)
 import { message } from 'react-message-popup'
 import AppMovieInfo from "../components/AppMovieInfo";
-import AppMovieContent from "../components/AppMovieContent";
+import AppContent from "../components/AppContent";
 
 
 const AddMovie = () => {
@@ -91,7 +91,7 @@ const AddMovie = () => {
                 {formProgress === 0 ? (
                     <AppMovieInfo setShowId={setShowId} setLoading={setLoading} setFormProgress={setFormProgress} ref={childRef1}/>
                 ) : formProgress === 50 ? (
-                    <AppMovieContent setLoading={setLoading} setFormProgress={setFormProgress} showId={showId} ref={childRef2}/>
+                    <AppContent setLoading={setLoading} setFormProgress={setFormProgress} showId={showId} ref={childRef2}/>
                 ) : 
                 <div className="alert alert-success d-flex align-items-center mt-5" role="alert">
                     <svg

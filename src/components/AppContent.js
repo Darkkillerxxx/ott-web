@@ -4,7 +4,7 @@ import { AppText } from "./AppText";
 import AppCard from "./AppCard";
 
 
-const AppMovieContent = forwardRef(({showId, setLoading, setFormProgress},ref)=>{
+const AppContent = forwardRef(({showId, setLoading, setFormProgress,isUploadingMovie = true,episodeId},ref)=>{
     const [trailerType, setTrailerType] = useState(null);
     const [videoType, setVideoType] = useState(null);
 
@@ -14,7 +14,7 @@ const AppMovieContent = forwardRef(({showId, setLoading, setFormProgress},ref)=>
     
         // Create a FormData object to gather the input data
         const formData = new FormData(form);
-        formData.append('showId', showId); 
+        isUploadingMovie ? formData.append('showId', showId) : formData.append('episodeId',episodeId);
     
         // Make an API call using fetch
         setLoading(true);
@@ -57,54 +57,62 @@ const AppMovieContent = forwardRef(({showId, setLoading, setFormProgress},ref)=>
     }));
 
     return(
-        <AppCard title={"Movie Contents"}>
+        <AppCard title={ isUploadingMovie ? "Movie Contents" : "Episode Contents"}>
         <form id='fileForm' action="http://localhost:3000/api/shows/uploadContent" method="post" enctype="multipart/form-data">
             <div className="row">
-                <div className="col-3 mb-3">
-                    <AppText>Trailer Type</AppText>
-                    <select
-                        className="form-select"
-                        onChange={(e) => setTrailerType(e.target.value)}
-                        aria-label="Default select example"
-                    >
-                        <option selected>Select Trailer Type</option>
-                        <option value="1">Server Video</option>
-                        <option value="2">External URL</option>
-                        <option value="3">Youtube</option>
-                    </select>
-                </div>
+                {
+                    isUploadingMovie ?
+                    <> 
+                        <div className="col-3 mb-3">
+                            <AppText>Trailer Type</AppText>
+                            <select
+                                className="form-select"
+                                onChange={(e) => setTrailerType(e.target.value)}
+                                aria-label="Default select example"
+                            >
+                                <option selected>Select Trailer Type</option>
+                                <option value="1">Server Video</option>
+                                <option value="2">External URL</option>
+                                <option value="3">Youtube</option>
+                            </select>
+                        </div>
 
-                {trailerType === "1" ? (
-                    <div className="col-9">
-                        <AppText>Upload Server File</AppText>
-                        <input
-                            className="form-control"
-                            type="file"
-                            id="trailerFile"
-                            name='trailerFile'
-                        />
-                    </div>
-                ) : trailerType === "2" ? (
-                    <div className="col-9">
-                        <AppText>External Server URL</AppText>
-                        <input
-                            type="text"
-                            name="trailerExt"
-                            className="form-control"
-                            placeholder="Enter External URL"
-                        />
-                    </div>
-                ) : trailerType === "3" ? (
-                    <div className="col-9">
-                        <AppText>Enter Youtube Id</AppText>
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Enter Youtube Id"
-                            name="trailerYoutubeId"
-                        />
-                    </div>
-                ) : null}
+                        {trailerType === "1" ? (
+                            <div className="col-9">
+                                <AppText>Upload Server File</AppText>
+                                <input
+                                    className="form-control"
+                                    type="file"
+                                    id="trailerFile"
+                                    name='trailerFile'
+                                />
+                            </div>
+                        ) : trailerType === "2" ? (
+                            <div className="col-9">
+                                <AppText>External Server URL</AppText>
+                                <input
+                                    type="text"
+                                    name="trailerExt"
+                                    className="form-control"
+                                    placeholder="Enter External URL"
+                                />
+                            </div>
+                        ) : trailerType === "3" ? (
+                            <div className="col-9">
+                                <AppText>Enter Youtube Id</AppText>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Enter Youtube Id"
+                                    name="trailerYoutubeId"
+                                />
+                            </div>
+                        ) : null}
+                    </>
+                    :
+                    null
+                }
+               
 
                 <div className="col-3 mb-3">
                     <AppText>Video</AppText>
@@ -196,25 +204,42 @@ const AppMovieContent = forwardRef(({showId, setLoading, setFormProgress},ref)=>
                     </>
                 ) : null}
 
-                <div className="col-3 mb-3">
-                    <AppText>Movie Thumbnail Image</AppText>
-                    <input
-                        className="form-control"
-                        type="file"
-                        id="thumbnailImage"
-                        name="thumbnailImage"
-                    />
-                </div>
+                {
+                    isUploadingMovie ?
+                    <>
+                        <div className="col-3 mb-3">
+                            <AppText>Movie Thumbnail Image</AppText>
+                            <input
+                                className="form-control"
+                                type="file"
+                                id="thumbnailImage"
+                                name="thumbnailImage"
+                            />
+                        </div>
 
-                <div className="col-3 mb-3">
-                    <AppText>Movie Landscape Image</AppText>
-                    <input
-                        className="form-control"
-                        type="file"
-                        id="movieImage"
-                        name="movieImage"
-                    />
-                </div>
+                        <div className="col-3 mb-3">
+                            <AppText>Movie Thumbnail Image</AppText>
+                            <input
+                                className="form-control"
+                                type="file"
+                                id="thumbnailImage"
+                                name="thumbnailImage"
+                            />
+                        </div>
+
+                        <div className="col-3 mb-3">
+                            <AppText>Movie Landscape Image</AppText>
+                            <input
+                                className="form-control"
+                                type="file"
+                                id="movieImage"
+                                name="movieImage"
+                            />
+                        </div>
+                    </>
+                    :
+                    null
+                }
             </div>
         </form>
     </AppCard>
@@ -222,4 +247,4 @@ const AppMovieContent = forwardRef(({showId, setLoading, setFormProgress},ref)=>
 }) 
 
 
-export default AppMovieContent
+export default AppContent

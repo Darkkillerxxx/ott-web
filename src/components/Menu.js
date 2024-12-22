@@ -16,7 +16,7 @@ const Menu = () => {
     {
       section: "Dashboard",
       links: [
-        { label: "View Dashboard", name: "dashboard", icon: faDashboard },
+        { label: "View Dashboard", name: "", icon: faDashboard },
       ],
     },
     {
@@ -24,18 +24,14 @@ const Menu = () => {
       links: [
         { label: "Add Movies", name: "addMovie", icon: faFilm },
         { label: "Add Shows", name: "addShows", icon: faTv },
-        { label: "Add Seasons", name: "addSeasons", icon: faFilm },
-        { label: "Add Episodes", name: "addEpisodes", icon: faTv },
       ],
     },
     {
       section: "Manage Content",
       links: [
         { label: "Manage Movies", name: "manageMovies", icon: faFilm },
-        { label: "Manage Episodes", name: "manageEpisodes", icon: faTv },
         { label: "Manage Live Shows", name: "manageLiveShows", icon: faTv },
         { label: "Manage Shows", name: "manageShows", icon: faTv },
-        { label: "Manage Seasons", name: "manageSeasons", icon: faFilm },
       ],
     },
     {

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {AppTextBold} from '../components/AppTextBold';
 import {AppText} from '../components/AppText';
 import ScreenHeader from '../components/ScreenHeader';
 import { message } from 'react-message-popup';
 
 const SeriesDetails = () => {
+    const navigate = useNavigate();
     const [series,setSeries] = useState(null);
     const { id } = useParams();
 
@@ -102,10 +103,11 @@ const SeriesDetails = () => {
 
                     <div className='row mt-3'>
                         {
-                            series[0]?.Seasons?.map((season)=>{
+                            series[0]?.Seasons?.map((season,index)=>{
+                                console.log(107,season)
                                 return(
                                     <div className='col-3'>
-                                        <div class="card mb-3" style={{width: '18rem'}}>
+                                        <div class="card mb-3" onClick={()=> navigate(`/manageEpisodes/${index}/${season.SeasonId}/${season.SeriesExternalId}`)} style={{width: '18rem'}}>
                                             <img class="card-img-top" src={`https://image.tmdb.org/t/p/original/${season.ImageUrl}`} alt="Card image cap"/>
                                                 <div class="card-body">
                                                     <AppTextBold class="card-title">{season.SeasonTitle}</AppTextBold>

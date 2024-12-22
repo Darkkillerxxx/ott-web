@@ -52,7 +52,7 @@ const App = () => {
               <Route path='/addMovie' element={<AddMovie />} />
               <Route path="/addSeasons" element={<CreateSeasonsForm />} />
               <Route path="/manageMovies" element={<ManageMovies />} />
-              <Route path="/manageEpisodes" element={<ManageEpisodes />} />
+              <Route path="/manageEpisodes/:seasonNumber/:seasonId/:seriesId" element={<ManageEpisodes />} />
               <Route path="/manageLiveShows" element={<ManageLiveShows />} />
               <Route path="/manageShows" element={<ManageShows />} />
               <Route path="/seriesDetails/:id" element={<SeriesDetails />} />           
@@ -61,7 +61,7 @@ const App = () => {
         </div>
       ) : (
         <Routes>
-          <Route path="/login" element={<Login handleLogin={handleLogin} />} />
+          <Route path="/" element={<Login handleLogin={handleLogin} />} />
           {/* Redirect unknown paths to Login */}
         </Routes>
       )}

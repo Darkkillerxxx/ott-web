@@ -70,3 +70,8 @@
     font-style: italic;
   }
   
+  .hover-effect:hover {
+    transform: scale(1.15); /* Slightly increases the size */
+    cursor: pointer; /* Changes cursor to pointer */
+  }
+  
