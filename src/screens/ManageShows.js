@@ -5,62 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 const ManageShows = () => {
   const [shows, setShows] = useState([]);
+  const [search,setSearch] = useState('');
+
   const navigate = useNavigate();
-
-  // Filters State
-  const [filters, setFilters] = useState({
-    search: "",
-    showName: [],
-  });
-
-  const handleSearchChange = (e) => {
-    setFilters({ ...filters, search: e.target.value });
-  };
-
-  const handleShowNameChange = (event) => {
-    const value = event.target.value;
-    setFilters({
-      ...filters,
-      showName: typeof value === "string" ? value.split(",") : value,
-    });
-  };
-
-  const applyFilters = () => {
-    let filteredShows = shows.filter((show) => {
-      let matches = true;
-      if (filters.search && !show.name.toLowerCase().includes(filters.search.toLowerCase())) {
-        matches = false;
-      }
-      if (filters.showName.length > 0 && !filters.showName.includes(show.name)) {
-        matches = false;
-      }
-      return matches;
-    });
-    setShows(filteredShows);
-  };
-
-  const [menuAnchor, setMenuAnchor] = useState(null);
-  const [selectedRowId, setSelectedRowId] = useState(null);
-
-  const handleMenuOpen = (event, id) => {
-    setMenuAnchor(event.currentTarget);
-    setSelectedRowId(id);
-  };
-
-  const handleMenuClose = () => {
-    setMenuAnchor(null);
-    setSelectedRowId(null);
-  };
-
-  const handleEdit = () => {
-    alert(`Edit show with ID: ${selectedRowId}`);
-    handleMenuClose();
-  };
-
-  const handleDelete = () => {
-    alert(`Delete show with ID: ${selectedRowId}`);
-    handleMenuClose();
-  };
 
   
   const fetchSeriesForId = async() =>{
@@ -68,7 +15,7 @@ const ManageShows = () => {
       const accessToken = localStorage.getItem('auth');
       console.log("Access Token:", accessToken);
 
-      const fetchSeries = await fetch('http://localhost:3000/api/shows/getSeriesList',{
+      const fetchSeries = await fetch(`http://localhost:3000/api/shows/getSeriesList/${search}`,{
         method:'GET',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -96,6 +43,16 @@ const ManageShows = () => {
     <div style={{ padding: "20px" }}>
       <ScreenHeader label="Manage Shows" />
       <div className="row">
+        <div className="col-12">
+          <div className="row">
+            <div className="col-10">
+              <input className="form-control" placeholder="Search Shows" onChange={(e)=>setSearch(e.target.value)}></input>
+            </div>
+            <div className="col-2">
+              <button className="btn btn-dark w-100" onClick={()=>fetchSeriesForId()}>Search Shows</button>
+            </div>
+          </div>
+        </div>
         <div className="col-12">
           <div className="row">
             {

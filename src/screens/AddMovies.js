@@ -17,6 +17,47 @@ const AddMovie = () => {
     const [formProgress, setFormProgress] = useState(0);
     const [loading, setLoading] = useState(false);
     const [showId, setShowId] = useState(150001);
+    const [tmdbMovieData, setTmdbMovieData] = useState(null);
+
+    const onFetchThirdPartyDetails = async(externalIds) =>{
+        try{
+            const movieResult = await fetch(`https://api.themoviedb.org/3/movie/${externalIds}?language=en-US`,{
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                    'Authorization':`Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1NDRjM2ZmZmUwZmYzM2MxN2YzMTllNTBhZWNlZTRjMSIsIm5iZiI6MTcyNDE1ODg2MC45OTMsInN1YiI6IjY2YzQ5MzhjNmZjOTZhZTZmYTFiMTM0MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.M4Rifyv_DZlpSohQeQy64Lt5yAO63mqBKolkuvt8alU` 
+                },
+            });
+
+            if(!movieResult.ok){
+                message.error('Something went wrong while fetching data');
+                return;
+            }
+
+            let movieTMDBData = await movieResult.json();
+            // setTmdbMovieData([{movieTMDBData:{ ...movieTMDBData }}]);
+
+            const creditResult = await fetch(`https://api.themoviedb.org/3/movie/${externalIds}/credits?language=en-US`,{
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                    'Authorization':`Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1NDRjM2ZmZmUwZmYzM2MxN2YzMTllNTBhZWNlZTRjMSIsIm5iZiI6MTcyNDE1ODg2MC45OTMsInN1YiI6IjY2YzQ5MzhjNmZjOTZhZTZmYTFiMTM0MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.M4Rifyv_DZlpSohQeQy64Lt5yAO63mqBKolkuvt8alU` 
+                },
+            });
+
+            if(!creditResult.ok){
+                message.error('Something went wrong while fetching data');
+                return;
+            }
+
+            let movieCreditsTMDBData = await creditResult.json();
+
+            setTmdbMovieData({...movieTMDBData,...movieCreditsTMDBData});
+        }
+        catch(error){
+            message.error(error.message,5000);
+        }
+    }
 
     return (
         <div className="p-2">
@@ -89,9 +130,9 @@ const AddMovie = () => {
                 </ProgressBar>
 
                 {formProgress === 0 ? (
-                    <AppMovieInfo setShowId={setShowId} setLoading={setLoading} setFormProgress={setFormProgress} ref={childRef1}/>
+                    <AppMovieInfo tmdbData={tmdbMovieData} onFetchThirdPartyDetails={onFetchThirdPartyDetails} setShowId={setShowId} setLoading={setLoading} setFormProgress={setFormProgress} ref={childRef1}/>
                 ) : formProgress === 50 ? (
-                    <AppContent setLoading={setLoading} setFormProgress={setFormProgress} showId={showId} ref={childRef2}/>
+                    <AppContent tmdbData={tmdbMovieData} setLoading={setLoading} setFormProgress={setFormProgress} showId={showId} ref={childRef2}/>
                 ) : 
                 <div className="alert alert-success d-flex align-items-center mt-5" role="alert">
                     <svg

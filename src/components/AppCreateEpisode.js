@@ -78,6 +78,7 @@ const AppCreateEpisodes = forwardRef(({ setLoading, setFormProgress, setEpisodeI
         
         document.getElementById('title').value = episode?.name?.replace(/'/g, '');
         document.getElementById('description').value = episode?.overview?.replace(/'/g, '');;
+        document.getElementById('airDate').value = episode?.air_date;
         setImageType('Url');
         setStillPath(episode?.still_path);
     }
@@ -165,6 +166,11 @@ const AppCreateEpisodes = forwardRef(({ setLoading, setFormProgress, setEpisodeI
                     </select>
                 </div>
 
+                <div className="col-4 mb-3">
+                    <AppText>Air Date</AppText>
+                    <input className="form-control" name="airDate" id="airDate" type="date"/>
+                </div>
+
                 {imageType === 'Url' ? (
                     <>
                         <div className="col-4 mb-3">
@@ -191,45 +197,6 @@ const AppCreateEpisodes = forwardRef(({ setLoading, setFormProgress, setEpisodeI
                         </div>
                     </>
                 ) : null}
-
-                {/* <div className="col-4 mb-3">
-                    <AppText>File Type</AppText>
-                    <select
-                        onChange={(e)=> setFileTypeType(e.target.value)}
-                        className="form-select"
-                    >
-                        <option value="">Select Video Type</option>
-                        <option value="Url">Url</option>
-                        <option value="File">File</option>
-                    </select>
-                </div>
-
-                {fileType === 'Url' ? (
-                    <>
-                        <div className="col-4 mb-3">
-                            <AppText>Episode Video URL</AppText>
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter Still Image URL"
-                                id="stillImageUrl"
-                                name="stillImageUrl"
-                            />
-                        </div>
-                    </>
-                ) : fileType === 'File' ? (
-                    <>
-                        <div className="col-4 mb-3">
-                            <AppText>Episode File</AppText>
-                            <input
-                                type="file"
-                                className="form-control"
-                                id="episodeVideo"
-                                name="episodeVideo"
-                            />
-                        </div>
-                    </>
-                ) : null} */}
             </div>
         </form>
       

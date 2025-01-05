@@ -1,173 +1,105 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Grid,
-  TextField,
-  Button,
-  Typography,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  Paper,
-} from '@mui/material';
-import ScreenHeader from '../components/ScreenHeader';
+import React, { useState, useEffect } from "react";
+import ScreenHeader from "../components/ScreenHeader";
+import { message } from "react-message-popup";
+import { useNavigate } from "react-router-dom";
 
 const ManageMovies = () => {
-  const [episodes, setEpisodes] = useState([
-    { id: 1, title: 'A Man On the Inside', genre: 'Action', language: 'English', image: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSJqeu-_8A0j9RDA6df4AjhPQ5mgHq4qxvVSMB8Nd_byqe4ByuLSqbAAceMgqafFWZwNwJE' },
-    { id: 2, title: 'Navarasam', genre: 'Drama', language: 'Hindi', image: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRVCtf9DbnM8VAsGckOqGGkX7RwVm2YzULrBgyHl_vOWxkc82wg' },
-    { id: 3, title: 'Kaala Paani', genre: 'Horror', language: 'Tamil', image: 'https://via.placeholder.com/200' },
-    { id: 4, title: 'Queen of Tears', genre: 'Comedy', language: 'Hindi(Dub)', image: 'https://via.placeholder.com/200' },
-  ]);
+  const [movies, setMovies] = useState([]);
+  const [search,setSearch] = useState('');
 
-  const [filters, setFilters] = useState({
-    search: '',
-    genre: '',
-    language: '',
-  });
+  const navigate = useNavigate();
 
-  const handleSearchChange = (e) => {
-    setFilters({ ...filters, search: e.target.value });
-  };
+  
+  const fetchMoviesForId = async() =>{
+    try{  
+      const accessToken = localStorage.getItem('auth');
+      console.log("Access Token:", accessToken);
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
-  };
+      const fetchMovies = await fetch(`http://localhost:3000/api/shows/getMoviesList/${search}`,{
+        method:'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        }
+      })
 
-  const applyFilters = () => {
-    let filteredEpisodes = episodes.filter((episode) => {
-      let matches = true;
-      if (filters.search && !episode.title.toLowerCase().includes(filters.search.toLowerCase())) {
-        matches = false;
+      if(!fetchMovies.ok){
+        const errorText = await fetchMovies.text(); // If API returns non-JSON error
+        throw new Error(errorText || "Failed to upload content");
       }
-      if (filters.genre && filters.genre !== episode.genre) {
-        matches = false;
-      }
-      if (filters.language && filters.language !== episode.language) {
-        matches = false;
-      }
-      return matches;
-    });
-    setEpisodes(filteredEpisodes);
-  };
+
+      const moviesListJSON = await fetchMovies.json();
+      setMovies([...moviesListJSON.data]);
+    }
+    catch(error){
+       message.error('Something went Wrong while fetching series list');
+    }
+  }
+
+  useEffect(()=>{
+    fetchMoviesForId();
+  },[])
 
   return (
-    <div>
-      {/* Header Section */}
-      <Grid container alignItems="center" justifyContent="space-between" style={{ marginBottom: '20px' }}>
-        <ScreenHeader label="Manage Movies" />
-      </Grid>
-
-      <Grid container spacing={3}>
-        {/* Filters Section */}
-        <Grid item xs={2}>
-          <Paper elevation={0} style={{ padding: '20px', height: 'auto' }}>
-            <Typography variant="h6" gutterBottom>
-              Filters
-            </Typography>
-
-            {/* Search Movies */}
-            <FormControl fullWidth margin="normal">
-              <TextField
-                label="Search Movies"
-                variant="outlined"
-                name="search"
-                value={filters.search}
-                onChange={handleSearchChange}
-              />
-            </FormControl>
-
-            {/* Movie Genre */}
-            <FormControl fullWidth margin="normal">
-              <InputLabel>Movie Genre</InputLabel>
-              <Select
-                name="genre"
-                value={filters.genre}
-                onChange={handleFilterChange}
-              >
-                {['Horror', 'Action', 'Drama', 'Comedy'].map((genre) => (
-                  <MenuItem key={genre} value={genre}>
-                    {genre}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            {/* Movie Language */}
-            <FormControl fullWidth margin="normal">
-              <InputLabel>Movie Language</InputLabel>
-              <Select
-                name="language"
-                value={filters.language}
-                onChange={handleFilterChange}
-              >
-                {['Hindi', 'Hindi(Dub)', 'English', 'Tamil'].map((language) => (
-                  <MenuItem key={language} value={language}>
-                    {language}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            {/* Apply Filters Button */}
-            <Button
-              variant="contained"
-              style={{ marginTop: '20px', backgroundColor: 'black', color: 'white' }}
-              onClick={applyFilters}
-              fullWidth
-            >
-              Apply Filters
-            </Button>
-          </Paper>
-        </Grid>
-
-        {/* Movies Section */}
-        <Grid item xs={9}>
-          <Grid container spacing={2}>
-            {episodes.map((episode) => (
-              <Grid item xs={3} key={episode.id}>
-                <div
-                  style={{
-                    position: 'relative',
-                    width: '100%',
-                    paddingBottom: '150%',
-                    overflow: 'hidden',
-                    borderRadius: '10px',
-                    boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-                  }}
-                >
-                  <img
-                    src={episode.image}
-                    alt={episode.title}
-                    style={{
-                      position: 'absolute',
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      filter: 'brightness(50%)',
-                    }}
-                  />
-                  <Typography
-                    variant="h6"
-                    style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      color: 'white',
-                      textAlign: 'center',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {episode.title}
-                  </Typography>
-                </div>
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid>
+    <div style={{ padding: "20px" }}>
+      <ScreenHeader label="Manage Shows" />
+      <div className="row">
+        <div className="col-12">
+          <div className="row">
+            <div className="col-10">
+              <input className="form-control" placeholder="Search Shows" onChange={(e)=>setSearch(e.target.value)}></input>
+            </div>
+            <div className="col-2">
+              <button className="btn btn-dark w-100" onClick={()=>fetchMoviesForId()}>Search Shows</button>
+            </div>
+          </div>
+        </div>
+        <div className="col-12">
+          <div className="row">
+            {
+              movies.map((show)=>{
+                return(
+                  <div className="col-2 mt-3">
+                    <div
+                      className="position-relative w-100 hover-effect"
+                      onClick={()=> navigate(`/seriesDetails/${show.ShowId}`)}
+                      style={{
+                        paddingBottom: '150%',
+                        overflow: 'hidden',
+                        borderRadius: '10px',
+                        boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                        transition: 'transform 0.3s ease'
+                      }}
+                    >
+                      <img
+                        src={`https://image.tmdb.org/t/p/original/${show.thumbnailUrl}`}
+                        alt={''}
+                        className="position-absolute w-100 h-100"
+                        style={{
+                          objectFit: 'cover',
+                          filter: 'brightness(50%)',
+                        }}
+                      />
+                      <h6
+                        className="position-absolute text-center text-white"
+                        style={{
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {show.SeriesName}
+                      </h6>
+                    </div>        
+                  </div>
+                )
+              })
+            }
+          
+          </div>
+        </div>
+      </div>
+   
     </div>
   );
 };

@@ -1,12 +1,14 @@
-import { useState,forwardRef, useImperativeHandle } from "react";
+import { useState,forwardRef, useImperativeHandle, useEffect } from "react";
 import { message } from 'react-message-popup'
 import { AppText } from "./AppText";
 import AppCard from "./AppCard";
 
 
-const AppContent = forwardRef(({showId, setLoading, setFormProgress,isUploadingMovie = true,episodeId},ref)=>{
+const AppContent = forwardRef(({showId, setLoading, setFormProgress,isUploadingMovie = true,episodeId,tmdbData},ref)=>{
     const [trailerType, setTrailerType] = useState(null);
     const [videoType, setVideoType] = useState(null);
+    const [movieImageExtUrl, setMovieImageExtUrl] = useState(null);
+    const [thumbnailImageExtUrl, setThumbnailImageExtUrl] = useState(null);
 
     const handleSubmit = async(e) => {
         // Get the form element
@@ -51,6 +53,14 @@ const AppContent = forwardRef(({showId, setLoading, setFormProgress,isUploadingM
                 setLoading(false); // Re-enable the button
             });
     };
+
+    useEffect(()=>{
+        if(tmdbData){
+            console.log(tmdbData);
+            setMovieImageExtUrl(tmdbData.backdrop_path);
+            setThumbnailImageExtUrl(tmdbData.poster_path);
+        }
+    },[])
     
     useImperativeHandle(ref, () => ({
         handleSubmit
@@ -208,17 +218,7 @@ const AppContent = forwardRef(({showId, setLoading, setFormProgress,isUploadingM
                     isUploadingMovie ?
                     <>
                         <div className="col-3 mb-3">
-                            <AppText>Movie Thumbnail Image</AppText>
-                            <input
-                                className="form-control"
-                                type="file"
-                                id="thumbnailImage"
-                                name="thumbnailImage"
-                            />
-                        </div>
-
-                        <div className="col-3 mb-3">
-                            <AppText>Movie Thumbnail Image</AppText>
+                            <AppText>Movie Cover Image</AppText>
                             <input
                                 className="form-control"
                                 type="file"
@@ -234,6 +234,30 @@ const AppContent = forwardRef(({showId, setLoading, setFormProgress,isUploadingM
                                 type="file"
                                 id="movieImage"
                                 name="movieImage"
+                            />
+                        </div>
+
+                        <div className="col-3 mb-3">
+                            <AppText>Movie Cover Image Url</AppText>
+                            <input
+                                className="form-control"
+                                type="text"
+                                id="thumbnailImageExtUrl"
+                                name="thumbnailImageExtUrl"
+                                value={thumbnailImageExtUrl}
+                                placeholder="Enter Movie Cover Image Url"
+                            />
+                        </div>
+
+                        <div className="col-3 mb-3">
+                            <AppText>Movie Landscape Image Url</AppText>
+                            <input
+                                className="form-control"
+                                type="text"
+                                id="movieImageExtUrl"
+                                name="movieImageExtUrl"
+                                value={movieImageExtUrl}
+                                placeholder="Enter Movie Landscape Image Url"
                             />
                         </div>
                     </>

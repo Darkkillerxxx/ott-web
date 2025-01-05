@@ -14,6 +14,7 @@ import ManageLiveShows from './screens/ManageLiveShows';
 import ManageShows from './screens/ManageShows';
 import AddMovie from './screens/AddMovies';
 import SeriesDetails from './screens/SeriesDetails';
+import Logout from './screens/Logout';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -55,13 +56,14 @@ const App = () => {
               <Route path="/manageEpisodes/:seasonNumber/:seasonId/:seriesId" element={<ManageEpisodes />} />
               <Route path="/manageLiveShows" element={<ManageLiveShows />} />
               <Route path="/manageShows" element={<ManageShows />} />
-              <Route path="/seriesDetails/:id" element={<SeriesDetails />} />           
+              <Route path="/seriesDetails/:id" element={<SeriesDetails />} />  
+              <Route path="/logout" element={<Logout />} />                    
             </Routes>
           </div>
         </div>
       ) : (
         <Routes>
-          <Route path="/" element={<Login handleLogin={handleLogin} />} />
+          <Route path="/login" element={<Login handleLogin={handleLogin} />} />
           {/* Redirect unknown paths to Login */}
         </Routes>
       )}

@@ -1,11 +1,11 @@
-import { useState,forwardRef, useImperativeHandle } from "react";
-import { message } from 'react-message-popup'
+import { useState,forwardRef, useImperativeHandle, useEffect } from "react";
+import message$, { message } from 'react-message-popup'
 
 import { AppText } from "./AppText";
 import AppCard from "./AppCard";
 
-const AppMovieInfo = forwardRef(({ setShowId, setLoading, setFormProgress },ref) => {
-    const [username, setUsername] = useState('');
+const AppMovieInfo = forwardRef(({ setShowId, setLoading, setFormProgress, onFetchThirdPartyDetails, tmdbData },ref) => {
+    const [movieName, setMovieName] = useState('');
     const [aboutMovie, setAboutMovie] = useState('');
     const [genre, setGenre] = useState('');
     const [language, setLanguage] = useState('');
@@ -17,12 +17,15 @@ const AppMovieInfo = forwardRef(({ setShowId, setLoading, setFormProgress },ref)
     const [releaseDate, setReleaseDate] = useState('');
     const [trailerType, setTrailerType] = useState(null);
     const [videoType, setVideoType] = useState(null);
+    const [externalIds,setExternalIds] = useState();
+    // const [tmdbData,setTmdbData] = useState(null);
+    const [movieVideoAndData,setMovieVideoAndData] = useState(null);
 
     const handleNext = async () => {
             setLoading(true);
             // Validate and collect data from the first step
             const movieData = {
-                name: username,
+                name: movieName,
                 description: aboutMovie,
                 genre,
                 language,
@@ -47,7 +50,7 @@ const AppMovieInfo = forwardRef(({ setShowId, setLoading, setFormProgress },ref)
                     },
                     body: JSON.stringify({
                         ...{
-                            name: username,
+                            name: movieName,
                             description: aboutMovie,
                             genre,
                             language,
@@ -84,41 +87,107 @@ const AppMovieInfo = forwardRef(({ setShowId, setLoading, setFormProgress },ref)
             }
     };
 
+    useEffect(()=>{
+        if(tmdbData){
+            console.log(92,tmdbData);
+
+            setMovieName(tmdbData.title);
+            setAboutMovie(tmdbData.overview);
+            
+            const movieGenre = [];
+            tmdbData?.genres?.forEach((genre)=>{
+                movieGenre.push(genre.name);
+            })
+
+            setGenre(movieGenre.toString());
+            
+            
+            const movieLanguage = [];
+            tmdbData?.spoken_languages?.forEach((language)=>{
+                movieLanguage.push(language?.english_name);
+            })
+
+            setLanguage(movieLanguage.toString());
+            
+            const productionCompany = [];
+            
+            tmdbData?.production_companies?.forEach((prodCompany) => {
+                productionCompany.push(prodCompany.name);
+            })
+
+            setProducer(productionCompany.toString());
+            setReleaseDate(tmdbData?.release_date);
+
+            
+            const directors = []
+            const cast = [];
+
+            tmdbData?.cast?.forEach((actors)=>{
+                cast.push(actors.name);
+            })
+
+            tmdbData?.crew?.forEach((crew)=>{
+                if(crew.department === 'Directing' && crew.job === "Director"){
+                    directors.push(crew.name);
+                }
+            })
+
+            setCast(cast.toString());
+            setDirector(directors.toString());
+
+        }
+    },[tmdbData]);
+
     useImperativeHandle(ref, () => ({
         handleNext
       }));
+
+    const onFetchTMDBDetails = async() =>{
+        onFetchThirdPartyDetails(externalIds);
+    }
     
     return(
         <AppCard title={'Movie Information'}>
                         <div className="row">
+                            <div className="col-3">
+                                <AppText>Select Third Party Platform</AppText>
+                                    <select
+                                        className="form-select"
+                                        id="tpp"
+                                        name="tpp"
+                                    >
+                                    <option value="tmdb">TMDB</option>
+                                </select>
+                            </div>
+
+                            <div className="col-7">
+                                <AppText>Enter Id</AppText>
+                                <input onChange={(e)=>setExternalIds(e.target.value)} type="text" className="form-control" placeholder="Enter Id" id="extId" name="extId"/>
+                            </div>
+                                
+                            <div className="col-2">
+                                <button onClick={(e)=> onFetchTMDBDetails()} className="btn" style={{backgroundColor:'black',color:'white',marginTop:25,width:'100%'}}>Fetch Details</button>
+                            </div>
+                        
+
                             <div className="col-12 mb-3 mt-3">
                                 <AppText>Movie Name</AppText>
-                                <input type="text" onChange={(e) => setUsername(e.target.value)} className="form-control" placeholder="Movie Name" aria-label="Movie Name" />
+                                <input type="text" onChange={(e) => setMovieName(e.target.value)} value={movieName} className="form-control" placeholder="Movie Name" aria-label="Movie Fenre" />
                             </div>
 
                             <div className="col-12 mb-3">
                                 <AppText>About the Movie</AppText>
-                                <textarea onChange={(e) => setAboutMovie(e.target.value)} className="form-control" placeholder="About the Movie" aria-label="Movie Description" />
+                                <textarea onChange={(e) => setAboutMovie(e.target.value)} value={aboutMovie} className="form-control" placeholder="About the Movie" aria-label="Movie Description" />
                             </div>
 
                             <div className="col-4 mb-3">
                                 <AppText>Genre</AppText>
-                                <select className="form-select" onChange={(e) => setGenre(e.target.value)} aria-label="Default select example">
-                                    <option selected>Select Genre</option>
-                                    <option value="Horror">Horror</option>
-                                    <option value="Comedy">Comedy</option>
-                                    <option value="Drama">Drama</option>
-                                </select>
+                                <input type="text" onChange={(e) => setGenre(e.target.value)} value={genre} className="form-control" placeholder="Movie Genre" aria-label="Movie Genre" />
                             </div>
 
                             <div className="col-4 mb-3">
                                 <AppText>Movie Language</AppText>
-                                <select className="form-select" onChange={(e) => setLanguage(e.target.value)} aria-label="Default select example">
-                                    <option selected>Select Language</option>
-                                    <option value="Hindi">Hindi</option>
-                                    <option value="Marathi">Marathi</option>
-                                    <option value="English">English</option>
-                                </select>
+                                <input type="text" onChange={(e) => setLanguage(e.target.value)} value={language} className="form-control" placeholder="Set Movie Language" aria-label="Set Movie Language"/>
                             </div>
 
                             <div className="col-4 mb-3">
@@ -132,17 +201,17 @@ const AppMovieInfo = forwardRef(({ setShowId, setLoading, setFormProgress },ref)
 
                             <div className="col-4 mb-3">
                                 <AppText>Cast</AppText>
-                                <input type="text" onChange={(e) => setCast(e.target.value)} className="form-control" placeholder="Enter Cast" aria-label="Movie Cast" />
+                                <input type="text" onChange={(e) => setCast(e.target.value)} value={cast} className="form-control" placeholder="Enter Cast" aria-label="Movie Cast" />
                             </div>
 
                             <div className="col-4 mb-3">
                                 <AppText>Producer</AppText>
-                                <input type="text" onChange={(e) => setProducer(e.target.value)} className="form-control" placeholder="Enter Producer" aria-label="Movie Producer" />
+                                <input type="text" onChange={(e) => setProducer(e.target.value)} value={producer} className="form-control" placeholder="Enter Producer" aria-label="Movie Producer" />
                             </div>
 
                             <div className="col-4 mb-3">
                                 <AppText>Director</AppText>
-                                <input type="text" onChange={(e) => setDirector(e.target.value)} className="form-control" placeholder="Enter Director" aria-label="Movie Director" />
+                                <input type="text" onChange={(e) => setDirector(e.target.value)} value={director} className="form-control" placeholder="Enter Director" aria-label="Movie Director" />
                             </div>
 
                             <div className="col-4 mb-3">
@@ -152,7 +221,7 @@ const AppMovieInfo = forwardRef(({ setShowId, setLoading, setFormProgress },ref)
 
                             <div className="col-4 mb-3">
                                 <AppText>Release date</AppText>
-                                <input type="date" onChange={(e) => setReleaseDate(e.target.value)} className="form-control" aria-label="Release Date" />
+                                <input type="date" onChange={(e) => setReleaseDate(e.target.value)} value={releaseDate} className="form-control" aria-label="Release Date" />
                             </div>
                         </div>
                     </AppCard>

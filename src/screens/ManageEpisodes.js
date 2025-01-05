@@ -45,6 +45,38 @@ const ManageEpisodes = () => {
     }
   }
 
+  const deleteEpisode = async (episodeId) => {
+    try {
+        const accessToken = localStorage.getItem('auth');
+        console.log("Access Token:", accessToken);
+
+        // Call the DELETE API to remove the episode
+        const deleteResult = await fetch(`http://localhost:3000/api/shows/deleteEpisode/${episodeId}`, {
+            method: "DELETE",
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!deleteResult.ok) {
+            const errorText = await deleteResult.text(); // Handle non-JSON errors
+            throw new Error(errorText || "Failed to delete episode");
+        }
+
+        const deleteResponseJson = await deleteResult.json();
+        console.log("Delete Response:", deleteResponseJson);
+
+        // Notify the user and refresh the episodes list
+        message.success('Episode deleted successfully!');
+        fetchEpisodesList(); // Refresh the episode list
+    } catch (error) {
+        console.error('Error while deleting the episode:', error);
+        message.error('Something went wrong while deleting the episode');
+    }
+};
+
+
   useEffect(()=>{
     if(showEpisodesList){
         fetchEpisodesList();
@@ -69,8 +101,7 @@ const ManageEpisodes = () => {
                                 <AppTextBold>{episode.title}</AppTextBold>
                                 <AppText style={{marginTop:10}}>{episode.description}</AppText>
                                 <div className='d-flex' style={{marginTop:10}}>
-                                    <button className='btn btn-dark'>Edit Episode</button>
-                                    <button className='btn btn-danger' style={{marginLeft:10}}>Delete Episode</button>
+                                    <button className='btn btn-danger' onClick={()=>deleteEpisode(episode.id)} style={{marginLeft:10}}>Delete Episode</button>
                                 </div>
                             </div>
                         </div>

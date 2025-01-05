@@ -67,7 +67,7 @@ const Login = ({ handleLogin }) => {
         });
         localStorage.setItem('auth', data.accessToken);
         handleLogin(); // Invoke the login handler
-        navigate('/dashboard'); // Navigate to the dashboard
+        navigate('/'); // Navigate to the dashboard
       } else {
         toast.error(data.message || 'Failed to authenticate OTP.', {
           position: 'top-right', // Correct positioning syntax

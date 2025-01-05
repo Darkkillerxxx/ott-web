@@ -30,7 +30,7 @@ const Menu = () => {
       section: "Manage Content",
       links: [
         { label: "Manage Movies", name: "manageMovies", icon: faFilm },
-        { label: "Manage Live Shows", name: "manageLiveShows", icon: faTv },
+        // { label: "Manage Live Shows", name: "manageLiveShows", icon: faTv },
         { label: "Manage Shows", name: "manageShows", icon: faTv },
       ],
     },
